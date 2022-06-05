@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using HtmlAgilityPack;
 
 
 namespace Selenium_Assignment_Console
@@ -38,11 +39,11 @@ namespace Selenium_Assignment_Console
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             wait.Until(ExpectedConditions.TitleIs("Jobs | Trade Me Jobs"));
 
-            string currentUrl = driver.Url;
+            string title = driver.Title;
 
             closeBrowser(driver);
 
-            return currentUrl;
+            return title;
 
         }
 
@@ -91,7 +92,7 @@ namespace Selenium_Assignment_Console
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        Console.WriteLine("\r\nResponse Status Code is: " + response.StatusCode + " \r\nStatus Description is: {0}" + "\r\nLink: " + href, response.StatusDescription);
+                        Console.WriteLine("\r\nResponse Status Code is: " + response.StatusCode + " \r\nStatus Description is: {0}", response.StatusDescription);
                         response.Close();
                         return true;
                     }
@@ -118,48 +119,42 @@ namespace Selenium_Assignment_Console
 
         public string addToCart(string url)
         {
+
             WebDriver driver = new ChromeDriver(); //create a chrome driver
             driver.Navigate().GoToUrl(url); //go to automation practice
 
-            driver.FindElement(By.Id("search_query_top")).SendKeys("Faded Short Sleeve T-shirts"); //search for faded short sleeve t-shirts
-            driver.FindElement(By.Id("search_query_top")).SendKeys(Keys.Enter); // "Enter"
-            var element = driver.FindElement(By.CssSelector(".ajax_add_to_cart_button"));
-            element.Click();
+            var element = driver.FindElement(By.CssSelector(".ajax_add_to_cart_button[data-id-product='1']")); //add product
+            element.Click(); //add item to cart
+
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            var element2 = driver.FindElement(By.ClassName("cross"));
-            element2.Click();
+            var element2 = driver.FindElement(By.ClassName("cross")); 
+            element2.Click();//close popup window
 
-            driver.FindElement(By.Id("search_query_top")).Clear();
+            var element3 = driver.FindElement(By.CssSelector(".ajax_add_to_cart_button[data-id-product='2']")); //add product
+            element3.Click(); //add item to cart
 
-            driver.FindElement(By.Id("search_query_top")).SendKeys("Printed Chiffon Dress"); //search for printed chiffon dress
-            driver.FindElement(By.Id("search_query_top")).SendKeys(Keys.Enter); // "Enter"
-            var element3 = driver.FindElement(By.CssSelector(".ajax_add_to_cart_button"));
-            element3.Click();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             var element4 = driver.FindElement(By.ClassName("cross"));
-            element4.Click();
+            element4.Click(); //close popup window
 
             driver.FindElement(By.Id("search_query_top")).Clear();
 
-            driver.FindElement(By.Id("search_query_top")).SendKeys("Blouse"); //search for blouse
-            driver.FindElement(By.Id("search_query_top")).SendKeys(Keys.Enter); // "Enter"
-            var element5 = driver.FindElement(By.CssSelector(".ajax_add_to_cart_button"));
-            element5.Click();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            var element6 = driver.FindElement(By.ClassName("cross"));
-            element6.Click();
+            var element5 = driver.FindElement(By.CssSelector(".ajax_add_to_cart_button[data-id-product='5']"));
+            element5.Click(); //add item to cart
 
-            driver.Navigate().GoToUrl("http://automationpractice.com/index.php?controller=order");
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            var element6 = driver.FindElement(By.CssSelector("a.btn.btn-default.button.button-medium[title='Proceed to checkout']")); //go to checkout
+            element6.Click(); //close popup window
+
             var element7 = driver.FindElement(By.Id("1_1_0_0"));
-            element7.Click();
+            element7.Click(); //removes first item from the cart
 
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id("1_1_0_0")));
+            wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id("1_1_0_0"))); //waits until the item has been removed
 
-            var price = driver.FindElement(By.Id("total_price"));
+            var price = driver.FindElement(By.Id("total_price")); //get the price
 
-
-            string priceString = price.Text;
+            string priceString = price.Text; //convert price to string
 
             closeBrowser(driver);
 

@@ -25,7 +25,7 @@ namespace Selenium_Test
             string url = "http://www.trademe.co.nz/a/";
             var result = search.searchTradeMe(url);
 
-            Assert.AreEqual(result, "https://www.trademe.co.nz/a/jobs/search?search_string=IT%20jobs");
+            Assert.AreEqual(result, "Jobs | Trade Me Jobs");
 
         }
 
@@ -36,7 +36,7 @@ namespace Selenium_Test
             string url = "http://automationpractice.com";
             var result = search.addToCart(url);
 
-            Assert.AreEqual(result, "$45.40");
+            Assert.AreEqual(result, "$55.98");
         }
     }
 }

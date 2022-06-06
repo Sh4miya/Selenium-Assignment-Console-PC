@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using Selenium_Assignment_Console;
 
 
@@ -8,35 +10,51 @@ namespace Selenium_Test
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void SearchTaupoWeather()
         {
             var search = new Searches();
-            string url = "http://www.google.co.nz";
-            var result = search.searchGoogle(url);
+            WebDriver driver = new ChromeDriver(); //create a chrome driver
+            var result = search.searchGoogle(driver);
 
             Assert.AreEqual(result, "Taupo weather - Google Search");
             
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void FindTradeMeJobs()
         {
             var search = new Searches();
-            string url = "http://www.trademe.co.nz/a/";
-            var result = search.searchTradeMe(url);
+            WebDriver driver = new ChromeDriver(); //create a chrome driver
+            var result = search.searchTradeMe(driver);
 
             Assert.AreEqual(result, "Jobs | Trade Me Jobs");
 
         }
 
         [TestMethod]
-        public void TestMethod3()
+        public void CheckLinks()
+        {
+            var search = new Searches();
+            WebDriver driver = new ChromeDriver(); //create a chrome driver
+            search.TestLinks(driver);
+        }
+
+        [TestMethod]
+        public void AddThreeItemsRemoveOne()
         {
             var search = new Searches();
             string url = "http://automationpractice.com";
-            var result = search.addToCart(url);
+            WebDriver driver = new ChromeDriver(); //create a chrome driver
+            driver.Navigate().GoToUrl(url); //go to automation practice
 
-            Assert.AreEqual(result, "$55.98");
+            search.addToCart(driver, 1);
+            search.addToCart(driver, 2);
+            search.addToCart(driver, 5);
+            search.goToCheckout(driver);
+            search.removeFromCart(driver, 1);
+            string result = search.getTotalPrice(driver);
+            
+            Assert.AreEqual(result, "$57.98");
         }
     }
 }

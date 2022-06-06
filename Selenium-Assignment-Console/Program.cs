@@ -8,20 +8,23 @@ namespace Selenium_Assignment_Console
     {
         static void Main(string[] args)
         {
-           var search1 = new Searches();
-           //string url1 = "http://www.google.co.nz";
-           //search1.searchGoogle(url1);
+            WebDriver driver = new ChromeDriver(); //create a chrome driver
+            var search = new Searches();
 
-           //var search2 = new Searches();
+           string url1 = "http://www.google.co.nz";
+
+           search.searchGoogle(driver);
+
+
            //string url2 = "http://www.trademe.co.nz/a/";
-           //search2.searchTradeMe(url2);
+           //search.searchTradeMe(url2);
 
-            var search3 = new Searches();
             string url3 = "http://automationpractice.com";
-            search3.TestAndVerifyLinks(url3);
+           // search.TestLinks(driver);
+           //driver.Navigate().GoToUrl(url1); //go to automation practice
 
-            //var search4 = new Searches();
-            //search4.addToCart(url3);
+
+            //search.addToCart(driver, 1);
 
 
         }

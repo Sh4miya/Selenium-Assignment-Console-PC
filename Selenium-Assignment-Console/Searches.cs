@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
-
+using System.Text.RegularExpressions;
 
 namespace Selenium_Assignment_Console
 {
@@ -55,7 +55,7 @@ namespace Selenium_Assignment_Console
                 string href = link.GetAttribute("href");
                 if (href == "")
                 {
-                    Console.WriteLine("Empty String");
+                    Console.WriteLine("Empty String. Continuing. \r\n");
                     continue;
                 }
                 else if (href.Contains("http"))
@@ -71,11 +71,9 @@ namespace Selenium_Assignment_Console
                 else
                 {
                     Console.WriteLine(href + " is not a valid link");
-                    break;
+                    continue;
                 }
-            }
-            closeBrowser(driver);
-          
+            }          
         }
 
         public static bool IsValidLink(string href)
@@ -144,32 +142,91 @@ namespace Selenium_Assignment_Console
 
         public void goToCheckout(WebDriver driver)
         {
-            var element6 = driver.FindElement(By.CssSelector("a.btn.btn-default.button.button-medium[title='Proceed to checkout']")); //go to checkout
-            element6.Click(); //proceed to checkout
+            var element = driver.FindElement(By.CssSelector("a.btn.btn-default.button.button-medium[title='Proceed to checkout']")); //go to checkout
+            element.Click(); //proceed to checkout
         }
 
         public void removeFromCart(WebDriver driver, int num)
         {
-            int item;
-            item = num;
+            var delete = driver.FindElement(By.XPath("//*[contains(@id, '" + num + "')][contains(@title, 'Delete')]"));
+            driver.Navigate().GoToUrl(delete.GetAttribute("href"));          
+        }
 
-            var element7 = driver.FindElement(By.Id("1_1_0_0"));
-            element7.Click(); //removes first item from the cart
+        public double getHighestPrice(WebDriver driver)
+        {
+            var itemPrices = driver.FindElements(By.XPath("//*[contains(@class, 'price')][contains(@id, 'total_product_price')]"));
+            double maxprice = 0;
+            double total = 0;
+            int maxIndex = 0;
+            var delete = driver.FindElements(By.XPath("//*[contains(@title, 'Delete')]"));
 
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id("1_1_0_0"))); //waits until the item has been removed
+            for(int index = 0; index < itemPrices.Count; index++)
+            {
+                if (Double.Parse(itemPrices[index].Text.Substring(1)) > maxprice)
+                {
+                    maxprice = Double.Parse(itemPrices[index].Text.Substring(1));
+                    total += maxprice;
+                    maxIndex = index;
+                }
+            }
+
+            Console.WriteLine("Most expensive item is: " + " $" + maxprice);
+
+            driver.Navigate().GoToUrl(delete[maxIndex].GetAttribute("href"));
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            return total;
+        }
+
+        public double getTotalPrice(WebDriver driver)
+        {
+            var price = driver.FindElement(By.Id("total_price")); //get the price
+            double totalprice = 0;
+
+            totalprice = Double.Parse(price.Text.Substring(1));
+            closeBrowser(driver);
+
+            return totalprice;
 
         }
 
-        public string getTotalPrice(WebDriver driver)
+        public void allTradeMeLinks(WebDriver driver)
         {
-            var price = driver.FindElement(By.Id("total_price")); //get the price
+            string url = "http://www.trademe.co.nz/a/";
+            driver.Navigate().GoToUrl(url); //go to trademe
 
-            string priceString = price.Text; //convert price to string
-            closeBrowser(driver);
+            ReadOnlyCollection<IWebElement> links = driver.FindElements(By.TagName("a")); //get all the links
 
-            return priceString;
-
+            foreach (IWebElement link in links)
+            {
+                string href = link.GetAttribute("href");
+                if (href == "")
+                {
+                    continue;
+                }
+                else if (href == null)
+                {
+                    continue;
+                }
+                else if (href.Contains("property"))
+                {
+                    Console.WriteLine("Property link found: " + href);
+                    continue;
+                }
+                else if (href.Contains("services"))
+                {
+                    Console.WriteLine("Services link found: " + href);
+                    continue;
+                }
+                else if (href.Contains("http"))
+                {
+                    continue;
+                }
+                else
+                {
+                    continue;
+                }
+            }
         }
 
         public void closeBrowser(WebDriver driver)

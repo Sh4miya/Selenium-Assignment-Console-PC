@@ -10,23 +10,17 @@ namespace Selenium_Assignment_Console
         {
             WebDriver driver = new ChromeDriver(); //create a chrome driver
             var search = new Searches();
-
-           string url1 = "http://www.google.co.nz";
-
-           search.searchGoogle(driver);
-
-
-           //string url2 = "http://www.trademe.co.nz/a/";
-           //search.searchTradeMe(url2);
-
-            string url3 = "http://automationpractice.com";
-           // search.TestLinks(driver);
-           //driver.Navigate().GoToUrl(url1); //go to automation practice
-
-
+            string url = "http://automationpractice.com";
+            driver.Navigate().GoToUrl(url); //go to automation practice
+            //search.searchGoogle(driver);
+            //search.searchTradeMe(driver);
+            //search.TestLinks(driver);
             //search.addToCart(driver, 1);
-
-
+            //search.addToCart(driver, 2);
+            //search.addToCart(driver, 4);
+            //search.goToCheckout(driver);
+            //search.removeFromCart(driver, 1);
+            //search.getHighestPrice(driver);
         }
 
 

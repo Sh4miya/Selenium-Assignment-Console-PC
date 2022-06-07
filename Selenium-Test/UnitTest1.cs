@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Selenium_Assignment_Console;
-
+using System;
 
 namespace Selenium_Test
 {
@@ -17,6 +17,7 @@ namespace Selenium_Test
             var result = search.searchGoogle(driver);
 
             Assert.AreEqual(result, "Taupo weather - Google Search");
+            search.closeBrowser(driver);
             
         }
 
@@ -33,7 +34,7 @@ namespace Selenium_Test
         }
 
         [TestMethod]
-        public void CheckLinks()
+        public void CheckAndVerifyLinks()
         {
             var search = new Searches();
             WebDriver driver = new ChromeDriver(); //create a chrome driver
@@ -58,7 +59,7 @@ namespace Selenium_Test
 
             search.closeBrowser(driver);
             
-            Assert.AreEqual(result, 57.98);
+            Assert.AreEqual(57.98, result);
         }
 
         [TestMethod]
@@ -79,7 +80,7 @@ namespace Selenium_Test
 
             search.closeBrowser(driver);
 
-            Assert.AreEqual(result, 94.50);
+            Assert.AreEqual(76.01, Math.Round(result, 2));
 
         }
 
